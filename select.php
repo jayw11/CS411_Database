@@ -121,7 +121,7 @@
 									</div>		 -->							
 									<div class="6u$ 12u$(small)">
 										<input type="checkbox" id="jelly" name="ingredients[]" value="4" >
-										<label for="jelly">Coconut Jelly</label>
+										<label for="jelly">Jelly</label>
 										<input type="checkbox" id="milk" name="ingredients[]" value="5" >
 										<label for="milk">Milk</label>
 									</div>									
@@ -224,6 +224,7 @@
 		<header class="major">
 			<h2>Enjoy your drink!</h2>
 		</header>
+		<p>Here are the drinks you want based on your preference. You can either take your recipe and make your own drink, or go to the store selling the drink you want.</p>
 
 				<div class="row">
 						<?php
@@ -252,24 +253,32 @@
 							}
 							$dIDs = array_intersect($dIDs, $dIDsTemp);
 						}
-						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
+						$result = mysqli_query($link, "SELECT DISTINCT drinkID,drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
 						while($row = mysqli_fetch_array($result)){ 
+							$path = "assets/images/thumbs/".$row['drinkID'].".jpg";		
+							$dname = $row['drinkName'];
+							$sname = $row['storeName'];	
 						?>
 							<article class="6u 12u$(xsmall) work-item">
-								<a href="assets/images/fulls/01.jpg" class="image fit thumb"><img src="assets/images/thumbs/01.jpg" alt="" /></a>
-								<h3>Magna sed consequat tempus</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
+								<a href="<?php echo $path ?>" class="image fit thumb"><img src="<?php echo $path ?>" alt="" /></a>
+								<h3><?php Print "$dname"?></h3>
+								<p><?php Print "$sname"?></p>
 							</article>
 
 						<?php }
 					}else{
 						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot'"); 
-						while($row = mysqli_fetch_assoc($result)){ ?>
+						while($row = mysqli_fetch_array($result)){ 
+							$path = "assets/images/thumbs/".$row['drinkID'].".jpg";		
+							$dname = $row['drinkName'];
+							$sname = $row['storeName'];	
+						?>
 							<article class="6u 12u$(xsmall) work-item">
-								<a href="assets/images/fulls/01.jpg" class="image fit thumb"><img src="assets/images/thumbs/01.jpg" alt="" /></a>
-								<h3>Magna sed consequat tempus</h3>
-								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
+								<a href="<?php echo $path ?>" class="image fit thumb"><img src="<?php echo $path ?>" alt="" /></a>
+								<h3><?php Print "$dname"?></h3>
+								<p><?php Print "$sname"?></p>
 							</article>
+
 						<?php  }
 					}
 				}
