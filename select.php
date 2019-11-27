@@ -104,12 +104,12 @@
       <label for="tel" class="col-sm-2 control-label">What do you want</label>
       								</div>
 									<div class="6u 12u$(small)">
-										<input type="checkbox" id="demo-puddings" name="ingredients[]" value="1">
-										<label for="demo-puddings">Puddings</label>
-										<input type="checkbox" id="demo-boba" name="ingredients[]" value="2" >
-										<label for="demo-boba">Boba</label>
-										<input type="checkbox" id="demo-jelly" name="ingredients[]" value="3" >
-										<label for="demo-jelly">Coconut Jelly</label>
+										<input type="checkbox" id="boba" name="ingredients[]" value="1">
+										<label for="boba">Boba</label>
+										<input type="checkbox" id="puddings" name="ingredients[]" value="2" >
+										<label for="puddings">Pudding</label>
+										<input type="checkbox" id="jam" name="ingredients[]" value="3" >
+										<label for="jam">Jam</label>
 									</div>
 									<!-- <div class="6u$ 12u$(small)">
 										<input type="checkbox" id="demo-boba" name="ingredients[]" value="2" >
@@ -120,10 +120,10 @@
 										<label for="demo-jelly">Coconut Jelly</label>
 									</div>		 -->							
 									<div class="6u$ 12u$(small)">
-										<input type="checkbox" id="demo-milk" name="ingredients[]" value="4" >
-										<label for="demo-milk">Milk</label>
-										<input type="checkbox" id="demo-jam" name="ingredients[]" value="5" >
-										<label for="demo-jam">Jam</label>
+										<input type="checkbox" id="jelly" name="ingredients[]" value="4" >
+										<label for="jelly">Coconut Jelly</label>
+										<input type="checkbox" id="milk" name="ingredients[]" value="5" >
+										<label for="milk">Milk</label>
 									</div>									
 									<!-- <div class="6u$ 12u$(small)">
 										<input type="checkbox" id="demo-jam" name="ingredients[]" value="5" >
@@ -179,6 +179,7 @@
 					if(!empty($_POST['ingredients'])){
 						$ingredients = $_POST['ingredients'];
 						foreach ($ingredients as $ing){
+							
 							$ing_res = mysqli_query($link, "SELECT drinkID FROM toppings WHERE ingredientID='$ing'");
 							$dIDsTemp = [];
 							while($dr = mysqli_fetch_assoc($ing_res)){
@@ -186,6 +187,8 @@
 							}
 							$dIDs = array_intersect($dIDs, $dIDsTemp);
 						}
+
+
 						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
 						while($row = mysqli_fetch_array($result)){
 							Print "<tr>";
