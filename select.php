@@ -30,8 +30,10 @@
 					<h1><strong>Hi <?php Print "$user"?>!</br></br></h1>
 					<h2><a href="select.php" style="text-decoration:none;">Search</strong></a></h2>
 					<h2><a href="edit.php" style="text-decoration:none;">Setting</strong></a></h2>
-<!-- 					h5>Back to <a href="http://www.google.com">Home page</strong></a></h5
- -->				</div>
+					<br><br><br>
+
+ 				 	<h5><a href="index.php">Log out</strong></a></h5>
+ 				</div>
 			</header>
 
 		<!-- Main -->
@@ -48,7 +50,7 @@
 					</section>
 
     
- <form class="form-horizontal" action="select.php" method="post" role="form" style="padding-top:60px;padding-left: 0px;">
+ <form class="form-horizontal" action="select.php" method="post" role="form" style="padding-top:40px;padding-left: 0px;">
  
 
 <!-- cold/warm
@@ -68,7 +70,7 @@
 </section>
 
   
-  <br><br>
+  <br>
 <!-- sweetness
  -->     
 <section id="sweetness">
@@ -80,6 +82,7 @@
 			
 										<input type="radio" id="sweet50" name="sweetness" value="50">
 										<label for="sweet50">50</label>
+
 									</div>
 									<div class="6u$ 12u$(small)">
 										<input type="radio" id="sweet75" name="sweetness" value="75">
@@ -92,7 +95,7 @@
   </fieldset>
   </section>
 
-  <br><br>
+  <br>
 
 
 <!-- toppings
@@ -103,23 +106,29 @@
 									<div class="6u 12u$(small)">
 										<input type="checkbox" id="demo-puddings" name="ingredients[]" value="1">
 										<label for="demo-puddings">Puddings</label>
-									</div>
-									<div class="6u$ 12u$(small)">
 										<input type="checkbox" id="demo-boba" name="ingredients[]" value="2" >
 										<label for="demo-boba">Boba</label>
-									</div>
-									<div class="6u$ 12u$(small)">
 										<input type="checkbox" id="demo-jelly" name="ingredients[]" value="3" >
 										<label for="demo-jelly">Coconut Jelly</label>
-									</div>									
+									</div>
+									<!-- <div class="6u$ 12u$(small)">
+										<input type="checkbox" id="demo-boba" name="ingredients[]" value="2" >
+										<label for="demo-boba">Boba</label>
+									</div> -->
+									<!-- <div class="6u$ 12u$(small)">
+										<input type="checkbox" id="demo-jelly" name="ingredients[]" value="3" >
+										<label for="demo-jelly">Coconut Jelly</label>
+									</div>		 -->							
 									<div class="6u$ 12u$(small)">
 										<input type="checkbox" id="demo-milk" name="ingredients[]" value="4" >
 										<label for="demo-milk">Milk</label>
-									</div>									
-									<div class="6u$ 12u$(small)">
 										<input type="checkbox" id="demo-jam" name="ingredients[]" value="5" >
 										<label for="demo-jam">Jam</label>
-									</div>
+									</div>									
+									<!-- <div class="6u$ 12u$(small)">
+										<input type="checkbox" id="demo-jam" name="ingredients[]" value="5" >
+										<label for="demo-jam">Jam</label>
+									</div> -->
 									<br>
 
 <!--       <div class="col-sm-7">
@@ -197,18 +206,78 @@
 					}
 				}
 			?>
-									</tbody>
-									<tfoot>
-										<tr>
-											<td colspan="2"></td>
-									
-										</tr>
-									</tfoot>
-								</table>
-							</div>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="2"></td>	
+			</tr>
+		</tfoot>
+		</table>
+	</div>
+	</section>
 
 
-						</section>
+	<section id="two">
+		<header class="major">
+			<h2>Enjoy your drink!</h2>
+		</header>
+
+				<div class="row">
+						<?php
+				if($_SERVER["REQUEST_METHOD"] == "POST"){
+					$link = mysqli_connect("localhost", "root", "", "first_db");
+					//$username = mysqli_real_escape_string($link, $_POST['username']);
+					$userid = 1;
+					$item_num = 0;
+					$i_id1 = -1;$i_id2 = -1;$i_id3 = -1;$i_id4 = -1;$i_id5 = -1;
+					$coldhot = mysqli_real_escape_string($link, $_POST['coldhot']);
+					$sweetness = mysqli_real_escape_string($link, (int)$_POST['sweetness']);
+
+					$dIDs = [];
+					$drinks = mysqli_query($link, "SELECT drinkID FROM drinks");
+					while($dr = mysqli_fetch_assoc($drinks)){
+						$dIDs[] = $dr['drinkID'];
+					}
+
+					if(!empty($_POST['ingredients'])){
+						$ingredients = $_POST['ingredients'];
+						foreach ($ingredients as $ing){
+							$ing_res = mysqli_query($link, "SELECT drinkID FROM toppings WHERE ingredientID='$ing'");
+							$dIDsTemp = [];
+							while($dr = mysqli_fetch_assoc($ing_res)){
+								$dIDsTemp[] = $dr['drinkID'];
+							}
+							$dIDs = array_intersect($dIDs, $dIDsTemp);
+						}
+						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
+						while($row = mysqli_fetch_array($result)){ 
+						?>
+							<article class="6u 12u$(xsmall) work-item">
+								<a href="assets/images/fulls/01.jpg" class="image fit thumb"><img src="assets/images/thumbs/01.jpg" alt="" /></a>
+								<h3>Magna sed consequat tempus</h3>
+								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
+							</article>
+
+						<?php }
+					}else{
+						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot'"); 
+						while($row = mysqli_fetch_assoc($result)){ ?>
+							<article class="6u 12u$(xsmall) work-item">
+								<a href="assets/images/fulls/01.jpg" class="image fit thumb"><img src="assets/images/thumbs/01.jpg" alt="" /></a>
+								<h3>Magna sed consequat tempus</h3>
+								<p>Lorem ipsum dolor sit amet nisl sed nullam feugiat.</p>
+							</article>
+						<?php  }
+					}
+				}
+			?>
+
+
+					
+						<!-- <ul class="actions">
+							<li><a href="#" class="button">Full Portfolio</a></li>
+						</ul> -->
+					</section>
 
     <hr style="margin-top: 100px;">
     </div>

@@ -9,13 +9,24 @@
 		<link rel="stylesheet" href="assets/css/main2.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 	</head>
+		<?php
+	session_start(); //starts the session
+	if($_SESSION['user']){ //checks if user is logged in
+	}
+	else{
+		header("location:index.php"); // redirects if user is not logged in
+	}
+	$user = $_SESSION['user']; //assigns user value
+	$id_exists = false;
+	?>
+
 	<body id="top" >
 
 		<!-- Header -->
 			<header id="header">
 				<div class="inner">
 					<a href="#" class="image avatar"><img src="assets/images/avatar.jpg" alt="" /></a>
-					<h1><strong>Hi Jay!</br></br></h1>
+					<h1><strong>Hi <?php Print "$user"?>!</br></br></h1>
 					<h2><a href="select.php" style="text-decoration:none;">Search</strong></a></h2>
 					<h2><a href="edit.php" style="text-decoration:none;">Setting</strong></a></h2>
 				</div>
