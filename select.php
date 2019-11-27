@@ -141,84 +141,6 @@
   </div>
   <br><br>
 </form>
-<section id="one">
-	<header class="major">
-		<h2>Enjoy your drink!</h2>
-	</header>
-	<p>Here are the drinks you want based on your preference. You can either take your recipe and make your own drink, or go to the store selling the drink you want.</p>
-</section>
-
-<section>
-	<div class="table-wrapper">
-		<table>
-			<thead>
-				<tr>
-					<th>Drink</th>
-					<th>Recipe</th>
-					<th>Store</th>
-				</tr>
-			</thead>
-		<tbody>
-
-			<?php
-				if($_SERVER["REQUEST_METHOD"] == "POST"){
-					$link = mysqli_connect("localhost", "root", "", "first_db");
-					//$username = mysqli_real_escape_string($link, $_POST['username']);
-					$userid = 1;
-					$item_num = 0;
-					$i_id1 = -1;$i_id2 = -1;$i_id3 = -1;$i_id4 = -1;$i_id5 = -1;
-					$coldhot = mysqli_real_escape_string($link, $_POST['coldhot']);
-					$sweetness = mysqli_real_escape_string($link, (int)$_POST['sweetness']);
-
-					$dIDs = [];
-					$drinks = mysqli_query($link, "SELECT drinkID FROM drinks");
-					while($dr = mysqli_fetch_assoc($drinks)){
-						$dIDs[] = $dr['drinkID'];
-					}
-
-					if(!empty($_POST['ingredients'])){
-						$ingredients = $_POST['ingredients'];
-						foreach ($ingredients as $ing){
-							
-							$ing_res = mysqli_query($link, "SELECT drinkID FROM toppings WHERE ingredientID='$ing'");
-							$dIDsTemp = [];
-							while($dr = mysqli_fetch_assoc($ing_res)){
-								$dIDsTemp[] = $dr['drinkID'];
-							}
-							$dIDs = array_intersect($dIDs, $dIDsTemp);
-						}
-
-
-						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
-						while($row = mysqli_fetch_array($result)){
-							Print "<tr>";
-							Print '<td align="center">'. $row['drinkName'] . "</td>";
-							Print '<td align="center">'. $row['steps'] . "</td>";
-							Print '<td align="center">'. $row['storeName']."</td>";
-							Print "</tr>";
-						}
-					}else{
-						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot'"); 
-						while($row = mysqli_fetch_assoc($result)){
-							Print "<tr>";
-							Print '<td align="center">'. $row['drinkName'] . "</td>";
-							Print '<td align="center">'. $row['steps'] . "</td>";
-							Print '<td align="center">'. $row['storeName']."</td>";
-							Print "</tr>";
-						}
-					}
-				}
-			?>
-		</tbody>
-		<tfoot>
-			<tr>
-				<td colspan="2"></td>	
-			</tr>
-		</tfoot>
-		</table>
-	</div>
-	</section>
-
 
 	<section id="two">
 		<header class="major">
@@ -253,29 +175,91 @@
 							}
 							$dIDs = array_intersect($dIDs, $dIDsTemp);
 						}
-						$result = mysqli_query($link, "SELECT DISTINCT drinkID,drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
+
+
+						// $result = mysqli_query($link, "SELECT DISTINCT drinkID,drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
+
+						mysqli_query($link, "DROP PROCEDURE IF EXISTS GetAverage");
+						mysqli_query($link, "DELIMITER $$
+											CREATE PROCEDURE GetAverage()
+											    BEGIN
+											        DECLARE done int default 0;
+											        DECLARE currdrinkID int(11);
+											        DECLARE drinkIDcur CURSOR FOR (select drinkID
+																					from drinks 
+																					where sweetness='$sweetness' and hot_cold='$coldhot'
+																						and drinkID in 
+																						(".implode(',', $dIDs)."));
+											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+											        
+											        DROP TABLE IF EXISTS new_table;
+											        CREATE TABLE new_table(
+											            drinkID int(11), 
+											            drinkName VARCHAR(255), 
+											            avg_ratings REAL);
+											        
+											        OPEN drinkIDcur;
+											        REPEAT
+											            FETCH drinkIDcur INTO currdrinkID;
+											            INSERT INTO new_table
+											            (SELECT DISTINCT drinkID, drinkName, AVG(ratings) AS avg_ratings
+											             FROM ratings 
+											             WHERE drinkID=currdrinkID
+											             GROUP BY drinkID);          
+											    UNTIL done
+											    END REPEAT;
+											    CLOSE drinkIDcur;
+											    
+											    ALTER TABLE new_table ADD Grade VARCHAR(10) NULL;
+											    UPDATE new_table
+											    SET Grade='A'
+											    WHERE avg_ratings>=9;
+											    UPDATE new_table
+											    SET Grade='B'
+											    WHERE (avg_ratings>=8)AND(avg_ratings<9);
+											    UPDATE new_table
+											    SET Grade='C'
+											    WHERE (avg_ratings>=7)AND(avg_ratings<8);
+											    UPDATE new_table
+											    SET Grade='D'
+											    WHERE (avg_ratings>=6)AND(avg_ratings<7);
+											    UPDATE new_table
+											    SET Grade='F'
+											    WHERE avg_ratings<6;
+											    
+											    SELECT DISTINCT * FROM new_table;
+											END;
+											$$");
+						mysqli_query($link, "CALL GetAverage()");
+						$result = mysqli_query($link, "SELECT DISTINCT * FROM new_table order by avg_ratings DESC");
+
 						while($row = mysqli_fetch_array($result)){ 
-							$path = "assets/images/thumbs/".$row['drinkID'].".jpg";		
+							$image_path = "assets/images/thumbs/".$row['drinkID'].".jpg";
+							$drink_path = "drinks/".$row['drinkID'].".php";			
 							$dname = $row['drinkName'];
-							$sname = $row['storeName'];	
+							$rating = $row['avg_ratings'];
+							$grade = $row['Grade'];
 						?>
 							<article class="6u 12u$(xsmall) work-item">
-								<a href="<?php echo $path ?>" class="image fit thumb"><img src="<?php echo $path ?>" alt="" /></a>
-								<h3><?php Print "$dname"?></h3>
-								<p><?php Print "$sname"?></p>
+								<a href="<?php echo $image_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
+								<h2><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a> <p><?php Print "Rating:   $grade"?></p> </h2>
+
+								
 							</article>
 
 						<?php }
+
 					}else{
 						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot'"); 
 						while($row = mysqli_fetch_array($result)){ 
-							$path = "assets/images/thumbs/".$row['drinkID'].".jpg";		
+							$image_path = "assets/images/thumbs/".$row['drinkID'].".jpg";
+							$drink_path = "drink".$row['drinkID'].".php";		
 							$dname = $row['drinkName'];
 							$sname = $row['storeName'];	
 						?>
 							<article class="6u 12u$(xsmall) work-item">
-								<a href="<?php echo $path ?>" class="image fit thumb"><img src="<?php echo $path ?>" alt="" /></a>
-								<h3><?php Print "$dname"?></h3>
+								<a href="<?php echo $image_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
+								<h3><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a></h3>
 								<p><?php Print "$sname"?></p>
 							</article>
 
