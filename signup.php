@@ -39,7 +39,13 @@
 					<input class="login100-form-btn" type="submit" value="Sign Up"/>
 				</div>
 				
-				<br>
+				<br><br>
+
+				<div class="text-center">
+					<a href="signup.php" class="txt2 hov1">
+						Sign In
+					</a>
+				</div>
 			</form>
 
 			
@@ -72,8 +78,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	{
 		mysqli_query($link, "INSERT INTO users (username, password) VALUES ('$username','$password')"); //Inserts the value to table users
 		Print '<script>alert("Successfully Registered!");</script>'; // Prompts the user
-		$_SESSION['user'] = $username; //set the username in a session. This serves as a global variable
-		header("location: select.php"); // redirects the user to the authenticated home page
+		// $_SESSION['user'] = $username; //set the username in a session. This serves as a global variable
+		Print '<script>window.location.assign("index.php");</script>';// redirects the user to the authenticated home page
 		//Print '<script>window.location.assign("signup.php");</script>'; // redirects to register.php
 	}
 

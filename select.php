@@ -213,18 +213,12 @@
 											    ALTER TABLE new_table ADD Grade VARCHAR(10) NULL;
 											    UPDATE new_table
 											    SET Grade='A'
-											    WHERE avg_ratings>=9;
+											    WHERE avg_ratings>=8;
 											    UPDATE new_table
 											    SET Grade='B'
-											    WHERE (avg_ratings>=8)AND(avg_ratings<9);
+											    WHERE (avg_ratings>=6)AND(avg_ratings<8);
 											    UPDATE new_table
 											    SET Grade='C'
-											    WHERE (avg_ratings>=7)AND(avg_ratings<8);
-											    UPDATE new_table
-											    SET Grade='D'
-											    WHERE (avg_ratings>=6)AND(avg_ratings<7);
-											    UPDATE new_table
-											    SET Grade='F'
 											    WHERE avg_ratings<6;
 											    
 											    SELECT DISTINCT * FROM new_table;
