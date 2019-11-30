@@ -1,5 +1,12 @@
-<!DOCTYPE HTML>
-
+<?php
+	session_start(); //starts the session
+	if($_SESSION['user']){ //checks if user is logged in
+	}
+	else{
+		header("location:index.php"); // redirects if user is not logged in
+	}
+	$user = $_SESSION['user']; //assigns user value
+?>
 <html >
 	<head>
 		<title>Drink 1</title>
@@ -9,16 +16,6 @@
 		<link rel="stylesheet" href="../assets/css/main2.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 	</head>
-
-	<?php
-	session_start(); //starts the session
-	if($_SESSION['user']){ //checks if user is logged in
-	}
-	else{
-		header("location:index.php"); // redirects if user is not logged in
-	}
-	$user = $_SESSION['user']; //assigns user value
-	?>
 
 
 	<body id="top" >
@@ -54,13 +51,67 @@
 							<div class="box alt">
 								<div class="row 50% uniform">
 									<div class="12u$"><span class="image fit"><img src="../assets/images/fulls/05.jpg" alt="" /></span></div>
-									<div class="4u"><span class="image fit"><img src="../assets/images/thumbs/01.jpg" alt="" /></span></div>
-									<div class="4u"><span class="image fit"><img src="../assets/images/thumbs/02.jpg" alt="" /></span></div>
-									<div class="4u$"><span class="image fit"><img src="../assets/images/thumbs/03.jpg" alt="" /></span></div>
+									
 								</div>
 							</div>
 						</section>
 
+
+	<section>
+	<div class="table-wrapper">
+		<table class="alt">
+			<thead>
+				<tr>
+					<th>Store</th>
+					<th>Price</th>
+				</tr>
+			</thead>
+		<tbody>
+			<?php
+				
+					$link = mysqli_connect("localhost", "root", "", "first_db");
+					//$username = mysqli_real_escape_string($link, $_POST['username']);
+
+					if($item_num==0){
+						$result = mysqli_query($link, "select storeName, price from sells natural join stores where drinkID = 1"); 
+						while($row = mysqli_fetch_array($result)){
+							Print "<tr>";
+							Print '<td align="center">'. $row['storeName']."</td>";
+							Print '<td align="center">'. $row['price']."</td>";
+							Print "</tr>";
+							//Print '<script>alert("Incorrect Password!"+"'.$table_users.'"+"'.$table_password.'");</script>'; 
+						}
+					}
+				
+			?>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="2"></td>
+									
+										</tr>
+									</tfoot>
+								</table>
+							</div>
+
+			</section>
+
+
+	<section>
+						<h2>Steps</h2>
+
+						
+							<h4>Step1</h4>
+							<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
+							This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
+							This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
+
+							<h4>Step2</h4>
+							<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
+							This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
+							This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
+
+	</section>
 
 
     <hr style="margin-top: 100px;">

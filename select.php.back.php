@@ -169,6 +169,7 @@
 							Print '<td align="center">'. $row['steps'] . "</td>";
 							Print '<td align="center">'. $row['storeName']."</td>";
 							Print "</tr>";
+							//Print '<script>alert("Incorrect Password!"+"'.$table_users.'"+"'.$table_password.'");</script>'; 
 						}
 					}
 				}

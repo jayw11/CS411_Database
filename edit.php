@@ -1,5 +1,13 @@
-<!DOCTYPE HTML>
-
+<?php
+	session_start(); //starts the session
+	if($_SESSION['user']){ //checks if user is logged in
+	}
+	else{
+		header("location:index.php"); // redirects if user is not logged in
+	}
+	$user = $_SESSION['user']; //assigns user value
+	$id_exists = false;
+?>
 <html >
 	<head>
 		<title>EDIT profile</title>
@@ -9,16 +17,6 @@
 		<link rel="stylesheet" href="assets/css/main2.css" />
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 	</head>
-		<?php
-	session_start(); //starts the session
-	if($_SESSION['user']){ //checks if user is logged in
-	}
-	else{
-		header("location:index.php"); // redirects if user is not logged in
-	}
-	$user = $_SESSION['user']; //assigns user value
-	$id_exists = false;
-	?>
 
 	<body id="top" >
 
@@ -180,8 +178,12 @@
 <?php
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$link = mysqli_connect("localhost", "root", "", "first_db");
+
 	//$username = mysqli_real_escape_string($link, $_POST['username']);
-	$userid = 1;
+	$uid = mysqli_query($link, "SELECT userID FROM users WHERE username='$user'");
+	$dr = mysqli_fetch_assoc($uid);
+	$userid = $dr['userID'];
+
 	$i_info = $_POST['i_info'];
 	$d_info = $_POST['d_info'];
 	$u1_info = $_POST['u1_info'];
@@ -209,6 +211,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	}
 
 	if( isset ( $d_info ) ) { 
+		
 		$result2 = mysqli_query($link, "select * from ingredients where ingredientName = '$d_info' "); 
 		$row3 = mysqli_fetch_array($result2);
 		$row4 = (int)$row3['ingredientID'];
@@ -223,6 +226,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		}
 	}
 	if( isset ( $u1_info ) and  isset ( $u2_info )) { 
+		
 		$result3 = mysqli_query($link, "select * from ingredients where ingredientName = '$u1_info'"); 
 		$result4 = mysqli_query($link, "select * from ingredients where ingredientName = '$u2_info'"); 
 		$row5 = mysqli_fetch_array($result3);

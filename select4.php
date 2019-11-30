@@ -147,7 +147,7 @@
 		<p>Here are the drinks you want based on your preference. You can either take your recipe and make your own drink, or go to the store selling the drink you want.</p>
 
 				<div class="row">
-				<?php
+						<?php
 				if($_SERVER["REQUEST_METHOD"] == "POST"){
 					$link = mysqli_connect("localhost", "root", "", "first_db");
 					//$username = mysqli_real_escape_string($link, $_POST['username']);
@@ -175,56 +175,13 @@
 						}
 
 
-					$alIDs = [];
-					$alIn = mysqli_query($link, "SELECT ingredientID FROM allergies natural join users where username='$user' ");
-					while($al = mysqli_fetch_assoc($alIn)){
-						$alIDs[] = $al['ingredientID'];
-					}
-
-					foreach ($alIDs as $alID){
-							// Print '<script>alert("alID!"+"'.$alID.'");</script>'; 
-							$alDR= mysqli_query($link, "SELECT drinkID FROM toppings WHERE ingredientID='$alID'");
-							$alDRTemp = [];
-							while($adr = mysqli_fetch_assoc($alDR)){
-								$alDRTemp[] = $adr['drinkID'];
-								// foreach ($alDRTemp as $alDRTemps){
-							
-								// 		Print '<script>alert("alDRTemps!"+"'.$alDRTemps.'");</script>'; 
-								// }
-							}
-							// foreach ($dIDs as $did){
-							
-							// Print '<script>alert("did!"+"'.$did.'");</script>'; 
-							// }
-							$dIDs = array_diff($dIDs, $alDRTemp);
-					}
-
-					
-
-
-
 						// $result = mysqli_query($link, "SELECT DISTINCT drinkID,drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
-						mysqli_close ($link );
 
-						$mysqli = new mysqli("localhost", "root", "", "first_db");
-
-						if (!$mysqli->query("DROP TABLE IF EXISTS new_table2") || !$mysqli->query("CREATE TABLE new_table2(
-											            drinkID int(11), 
-											            
-											            sum_calories int(11))")) {
-						    //echo "Table1 creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
-						}
-
-						if (!$mysqli->query("DROP TABLE IF EXISTS new_table") || !$mysqli->query("CREATE TABLE new_table(
-											            drinkID int(11), 
-											            drinkName VARCHAR(255), 
-											            avg_ratings REAL)")) {
-						    //echo "Table1 creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
-						}
-
-						if (!$mysqli->query("DROP PROCEDURE IF EXISTS GetAverage") ||
-						    !$mysqli->query("CREATE PROCEDURE GetAverage() BEGIN 
-						    						DECLARE done int default 0;
+						mysqli_query($link, "DROP PROCEDURE IF EXISTS GetAverage");
+						mysqli_query($link, "DELIMITER $$
+											CREATE PROCEDURE GetAverage()
+											    BEGIN
+											        DECLARE done int default 0;
 											        DECLARE currdrinkID int(11);
 											        DECLARE drinkIDcur CURSOR FOR (select drinkID
 																					from drinks 
@@ -232,7 +189,13 @@
 																						and drinkID in 
 																						(".implode(',', $dIDs)."));
 											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-
+											        
+											        DROP TABLE IF EXISTS new_table;
+											        CREATE TABLE new_table(
+											            drinkID int(11), 
+											            drinkName VARCHAR(255), 
+											            avg_ratings REAL);
+											        
 											        OPEN drinkIDcur;
 											        REPEAT
 											            FETCH drinkIDcur INTO currdrinkID;
@@ -255,73 +218,24 @@
 											    UPDATE new_table
 											    SET Grade='C'
 											    WHERE avg_ratings<6;
-											    END;")) 
-						{
-						    //echo "Stored procedure creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
-						}
-
-						if (!$mysqli->query("CALL GetAverage()")) {
-						    //echo "CALL failed: (" . $mysqli->errno . ") " . $mysqli->error;
-						}
-
-
-					
-
-						if (!$mysqli->query("DROP PROCEDURE IF EXISTS GetSum") ||
-						    !$mysqli->query("CREATE PROCEDURE GetSum() BEGIN
-											        DECLARE done int default 0;
-											        DECLARE currdrinkID int(11);
-											        DECLARE drinkIDcur CURSOR FOR (select drinkID
-																					from drinks 
-																					where sweetness='$sweetness' and hot_cold='$coldhot'
-																						and drinkID in 
-																						(".implode(',', $dIDs)."));
-											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
-	
-											        
-											        OPEN drinkIDcur;
-											        REPEAT
-											            FETCH drinkIDcur INTO currdrinkID;
-											            INSERT INTO new_table2
-											            (SELECT DISTINCT drinkID, SUM(ingredientCalories) AS sum_calories
-											            FROM toppings natural join ingredients
-											             WHERE drinkID=currdrinkID            
-											            GROUP BY drinkID);                  
-											    UNTIL done
-											    END REPEAT;
-											    CLOSE drinkIDcur;
 											    
-												END;")) 
-						{
-						    //echo "Stored procedure creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
-						}
+											    SELECT DISTINCT * FROM new_table;
+											END;
+											$$");
+						mysqli_query($link, "CALL GetAverage()");
+						$result = mysqli_query($link, "SELECT DISTINCT * FROM new_table order by avg_ratings DESC");
 
-						if (!$mysqli->query("CALL GetSum()")) {
-						    //echo "CALL failed: (" . $mysqli->errno . ") " . $mysqli->error;
-						}
-
-
-						if (!($result = $mysqli->query("SELECT DISTINCT * FROM new_table natural join new_table2 order by avg_ratings DESC"))) {
-						    //echo "SELECT failed: (" . $mysqli->errno . ") " . $mysqli->error;
-						}
-						
-
-						$mysqli -> close();
-
-						$link = mysqli_connect("localhost", "root", "", "first_db");
 						while($row = mysqli_fetch_array($result)){ 
-						//while($row = $result->fetch_assoc()){ 
 							$image_path = "assets/images/thumbs/".$row['drinkID'].".jpg";
 							$drink_path = "drinks/".$row['drinkID'].".php";			
 							$dname = $row['drinkName'];
 							$rating = $row['avg_ratings'];
 							$grade = $row['Grade'];
-							$calories = $row['sum_calories'];
 						?>
 							<article class="6u 12u$(xsmall) work-item">
 								<a href="<?php echo $image_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
 								<h2><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a> <p><?php Print "Rating:   $grade"?></p> </h2>
-								</p><?php Print "Calories:   $calories"?></p> 
+
 								
 							</article>
 
@@ -344,7 +258,6 @@
 						<?php  }
 					}
 				}
-				mysqli_close ($link );
 			?>
 
 
