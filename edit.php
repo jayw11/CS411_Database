@@ -70,7 +70,8 @@
 					<!-- <option value="1">friends ID</option> -->
 						    <option value="allergies">allergies</option>
 						    <option value="favorite_drinks">favorite drinks</option>
-						    <option value="favorite_ingredients">favorite ingredients</option>
+						   <!--  <option value="favorite_ingredients">favorite ingredients</option> -->
+						    <option value="friend">friend</option>
 				</select>
 			</div>
 		<!-- </div> -->
@@ -102,7 +103,9 @@
 						  <!-- <option value="1">friends ID</option> -->
 						    <option value="allergies">allergies</option>
 						    <option value="favorite_drinks">favorite drinks</option>
-						    <option value="favorite_ingredients">favorite ingredients</option>
+						    <!-- <option value="favorite_ingredients">favorite ingredients</option> -->
+						    <option value="friend">friend</option>
+						   
 					  </select>
 				  </div>
 			  </div>
@@ -131,7 +134,7 @@
 							<!-- <option value="Select one">friends ID</option> -->
 						    <option value="allergies">allergies</option>
 						    <option value="favorite_drinks">favorite drinks</option>
-						    <option value="favorite_ingredients">favorite ingredients</option>
+						   <!--  <option value="favorite_ingredients">favorite ingredients</option> -->
 						</select>
 					<!-- </div> -->
 				</div>
@@ -219,21 +222,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			$query = mysqli_query($link, "INSERT INTO allergies (userID, ingredientID) VALUES ('$userid', '$row2')"); 
 		}
 		if ($selected_val1 == "favorite_drinks"){
-			$query = mysqli_query($link, "INSERT INTO favorite_drinks (userID, drinkID) VALUES ('$userid', '$row2')");
-			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.type = '$i_info' RETURN EXISTS((p)-[:FAVORITE]->(d)) AS flag");
+			//$i_info2 = (int)$i_info;
+			//$query = mysqli_query($link, "INSERT INTO favorite_drinks (userID, drinkID) VALUES ('$userid', '$row2')");
+			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.name = '$i_info' RETURN EXISTS((p)-[:FD]->(d)) AS flag");
 			$flag = $result->firstRecord()->get('flag');
 			if(!$flag){
-				$client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.type = '$i_info' CREATE (p)-[f:FAVORITE]->(d)");
+				
+				$client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.name = '$i_info' CREATE (p)-[:FD]->(d)");
 			} 
 		}
-		if ($selected_val1 == "favorite_ingredients"){
-			$query = mysqli_query($link, "INSERT INTO favorite_ingredients (userID, ingredientID) VALUES ('$userid', '$row2')"); 
-		}
+		
 		if ($selected_val1 == "friend"){
-			$result = $client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$i_info' RETURN EXISTS((p1)-[:FRIEND]->(p2)) AS flag");
+			$result = $client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$i_info' RETURN EXISTS((p1)-[:FriendWith]->(p2) -[:FriendWith]->(p1)) AS flag");
 			$flag = $result->firstRecord()->get('flag');
 			if(!$flag){
-				$client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$i_info' CREATE (p1)-[f:FRIEND]->(p2)");
+				$client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$i_info' CREATE (p1)-[f:FriendWith]->(p2) -[:FriendWith]-> (p1)");
 			}
 		}
 	}
@@ -246,21 +249,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			$query = mysqli_query($link, "DELETE FROM allergies where ingredientID = '$row4'"); 
 		}
 		if ($selected_val2 == "favorite_drinks"){
-			$query = mysqli_query($link, "DELETE FROM favorite_drinks where drinkID = '$row4'");
-			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.type = '$d_info' RETURN EXISTS((p)-[:FAVORITE]->(d)) AS flag");
+			//$query = mysqli_query($link, "DELETE FROM favorite_drinks where drinkID = '$row4'");
+			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.name = '$d_info' RETURN EXISTS((p)-[:FD]->(d)) AS flag");
 			$flag = $result->firstRecord()->get('flag');
 			if($flag){
-				$client->run("MATCH (p:Person)-[f:FAVORITE]->(d:Drink) WHERE p.name = '$user' AND d.type = '$d_info' DELETE f");
+				$client->run("MATCH (p:Person)-[f:FD]->(d:Drink) WHERE p.name = '$user' AND d.name = '$d_info' DELETE f");
 			} 
 		}
-		if ($selected_val2 == "favorite_ingredients"){
-			$query = mysqli_query($link, "DELETE FROM favorite_ingredients where ingredientID = '$row4'"); 
-		}
+		// if ($selected_val2 == "favorite_ingredients"){
+		// 	$query = mysqli_query($link, "DELETE FROM favorite_ingredients where ingredientID = '$row4'"); 
+		// }
 		if ($selected_val2 == "friend"){
-			$result = $client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$d_info' RETURN EXISTS((p1)-[:FRIEND]->(p2)) AS flag");
+			$result = $client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$d_info' RETURN EXISTS((p1)-[:FriendWith]->(p2)-[:FriendWith]->(p1)) AS flag");
 			$flag = $result->firstRecord()->get('flag');
 			if($flag){
-				$client->run("MATCH (p1:Person)-[f:FRIEND]->(p2:Person) WHERE p1.name = '$user' AND p2.name = '$d_info' DELETE f");
+				$client->run("MATCH (p1:Person)-[f1:FriendWith]->(p2:Person)-[f2:FriendWith]->(p1) WHERE p1.name = '$user' AND p2.name = '$d_info' DELETE f1,f2");
 			}
 		}
 	}
@@ -278,9 +281,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		if ($selected_val3 == "favorite_drinks"){
 			$query = mysqli_query($link, "UPDATE favorite_drinks SET drinkID = '$row8' where userID = '$userid'  and ingredientID = '$row6'");
 		}
-		if ($selected_val3 == "allergies"){
-			$query = mysqli_query($link, "UPDATE favorite_ingredients SET ingredientID = '$row8' where userID = '$userid'  and ingredientID = '$row6'");  
-		}
+		// if ($selected_val3 == "favorite_ingredients"){
+		// 	$query = mysqli_query($link, "UPDATE favorite_ingredients SET ingredientID = '$row8' where userID = '$userid'  and ingredientID = '$row6'");  
+		// }
 	}
 }
 ?>

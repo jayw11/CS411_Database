@@ -65,6 +65,7 @@
 			<thead>
 				<tr>
 					<th>Store</th>
+					<th>Location</th>
 					<th>Price</th>
 				</tr>
 			</thead>
@@ -72,10 +73,11 @@
 			<?php
 				
 					$link = mysqli_connect("localhost", "root", "", "first_db");
-					$result = mysqli_query($link, "select distinct `storeName`, `price` from `sells` natural join `stores` where `drinkID` = 1"); 
+					$result = mysqli_query($link, "select distinct storeName, location, price from sells natural join stores where drinkID = 1"); 
 					while($row = mysqli_fetch_array($result)){
 						Print "<tr>";
 						Print '<td align="center">'. $row['storeName']."</td>";
+						Print '<td align="center">'. $row['location']."</td>";
 						Print '<td align="center">'. $row['price']."</td>";
 						Print "</tr>";
 					}

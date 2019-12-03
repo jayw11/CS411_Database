@@ -46,7 +46,7 @@
 							<h2>More drinks from your friends' favorite!<br />
 							 </h2>
 						</header>
-						<p>Check them below.</p>
+						<p>Or try some new drinks!</p>
 
 					</section>
 
@@ -69,8 +69,8 @@
     $parameter = array('name1' => $user);
 	$query1 = "Match (n1:Person{name: {name1}}) -[:FD]->(d1:Drink) <-[:FD]- (n2:Person) -[:FriendWith]- (n1) With n1, collect(distinct n2.name) as clt0, collect(distinct d1.idx) as clt Return clt0, clt";
 	$result = $client->run($query1,$parameter)->records();
-	$array0 = "";
-	$array1 = "";
+	$array0 = array();
+	$array1 = array();
     foreach ($result as $record){
 	   $array0 = ($record->get('clt0'));
 	   $array1 = ($record->get('clt'));
@@ -98,7 +98,7 @@
 
 		$query3 = "Match (n1:Person{name: {name1}})-[:FD]->(d1:Drink) Return distinct d1.idx as drinkid";
 		$parameters = array('name1' => $user, 'array1' => $array1);
-		$result3 = $client->run($query2,$parameters)->records();
+		$result3 = $client->run($query3,$parameters)->records();
 		$fd_array = array();
 		foreach ($result3 as $record) {
 			$idx = ($record->get('drinkid'));
@@ -106,8 +106,17 @@
 		}
 
 		//$fd_array = array(1,2,3); // delete this if the connection works 
+		// first register. no favorite drink
 		$link =  mysqli_connect("localhost", "root", "", "first_db");
-		$result = mysqli_query($link, "SELECT drinkID FROM drinks WHERE not drinkID in (".implode(',', $fd_array).") ORDER BY RAND() LIMIT 4");
+		if (count($fd_array == 0)) {
+			$result = mysqli_query($link, "SELECT drinkID FROM drinks ORDER BY RAND() LIMIT 4");
+		}
+		else {
+		
+			$result = mysqli_query($link, "SELECT drinkID FROM drinks WHERE drinkID not in (".implode(',', $fd_array).") ORDER BY RAND() LIMIT 4");
+		}
+
+
 		while($row = mysqli_fetch_array($result)){ 
 			$did = $row['drinkID'];
 			array_push($recommends, $did);

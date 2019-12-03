@@ -56,6 +56,18 @@
 </html>
 
 <?php
+
+require_once __DIR__ .'/vendor/autoload.php';
+use GraphAware\Neo4j\Client\ClientBuilder;
+
+$config = \GraphAware\Bolt\Configuration::newInstance()
+->withCredentials('lidingl2', 'b.iMdymGhdGYaM.wlkebHGSvwjzWA5F')
+->withTimeout(10)
+->withTLSMode(\GraphAware\Bolt\Configuration::TLSMODE_REQUIRED);
+
+$driver = \GraphAware\Bolt\GraphDatabase::driver('bolt://hobby-efdadablacmmgbkedjegaddl.dbs.graphenedb.com:24787', $config);
+$client = $driver->session();
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$link = mysqli_connect("localhost", "root", "", "first_db");
 	$username = mysqli_real_escape_string($link,$_POST['username']);
@@ -77,6 +89,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	if($bool) // checks if bool is true
 	{
 		mysqli_query($link, "INSERT INTO users (username, password) VALUES ('$username','$password')"); //Inserts the value to table users
+		$query_neo = "create (n1:Person{name: {name1}})";
+		$param_neo = array('name1' => $username);
+		$client -> run($query_neo, $param_neo);
 		Print '<script>alert("Successfully Registered!");</script>'; // Prompts the user
 		// $_SESSION['user'] = $username; //set the username in a session. This serves as a global variable
 		Print '<script>window.location.assign("index.php");</script>';// redirects the user to the authenticated home page
