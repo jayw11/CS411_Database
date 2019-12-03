@@ -28,6 +28,8 @@
 					<h1><strong>Hi <?php Print "$user"?>!</br></br></h1>
 					<h2><a href="select.php" style="text-decoration:none;">Search</strong></a></h2>
 					<h2><a href="edit.php" style="text-decoration:none;">Setting</strong></a></h2>
+					<h2><a href="rate.php" style="text-decoration:none;">Rate</strong></a></h2>
+					<h2><a href="recommendations.php" style="text-decoration:none;">Recommend</strong></a></h2>
 					<br><br><br>
 
  				 	<h5><a href="index.php">Log out</strong></a></h5>
@@ -58,10 +60,10 @@
 	<label for="tel" class="col-sm-2 control-label"> Cold/Hot </label>
 
 			<div class="4u 12u$(small)">
-				<input type="radio" id="demo-priority-low" name="coldhot" value="cold" checked>
-				<label for="demo-priority-low">COLD</label>
-				<input type="radio" id="demo-priority-normal" name="coldhot" value="hot">
-				<label for="demo-priority-normal">HOT</label>
+				<input type="radio" id="cold" name="coldhot" value="cold" checked>
+				<label for="cold">COLD</label>
+				<input type="radio" id="hot" name="coldhot" value="hot">
+				<label for="hot">HOT</label>
 			</div>
 
 </fieldset>
@@ -74,19 +76,21 @@
 <section id="sweetness">
   <fieldset id="group2">
  <label for="tel" class="col-sm-2 control-label"> Sweetness </label>
-									<div class="4u 12u$(small)">
-										<input type="radio" id="sweet25" name="sweetness" value="25" checked>
-										<label for="sweet25">25</label>
-			
-										<input type="radio" id="sweet50" name="sweetness" value="50">
-										<label for="sweet50">50</label>
-
+ 									
+									<div class="6u 12u$(small)">
+										<input type="checkbox" id="sweet0" name="sweetness[]" value="0" checked>
+										<label for="sweet0">0</label>
+										<input type="checkbox" id="sweet20" name="sweetness[]" value="20" >
+										<label for="sweet20">20</label>
+										<input type="checkbox" id="sweet40" name="sweetness[]" value="40" >
+										<label for="sweet40">40</label>
 									</div>
 									<div class="6u$ 12u$(small)">
-										<input type="radio" id="sweet75" name="sweetness" value="75">
-										<label for="sweet75">75</label>
-						
-										<input type="radio" id="sweet100" name="sweetness" value="100">
+										<input type="checkbox" id="sweet60" name="sweetness[]" value="60" >
+										<label for="sweet60">60</label>
+										<input type="checkbox" id="sweet80" name="sweetness[]" value="80" >
+										<label for="sweet80">80</label>
+										<input type="checkbox" id="sweet100" name="sweetness[]" value="100" >
 										<label for="sweet100">100</label>
 									</div>
 
@@ -106,27 +110,42 @@
 										<label for="boba">Boba</label>
 										<input type="checkbox" id="puddings" name="ingredients[]" value="2" >
 										<label for="puddings">Pudding</label>
-										<input type="checkbox" id="jam" name="ingredients[]" value="3" >
-										<label for="jam">Jam</label>
+										<input type="checkbox" id="caramel" name="ingredients[]" value="3" >
+										<label for="caramel">caramel</label>
 									</div>
-									<!-- <div class="6u$ 12u$(small)">
-										<input type="checkbox" id="demo-boba" name="ingredients[]" value="2" >
-										<label for="demo-boba">Boba</label>
-									</div> -->
-									<!-- <div class="6u$ 12u$(small)">
-										<input type="checkbox" id="demo-jelly" name="ingredients[]" value="3" >
-										<label for="demo-jelly">Coconut Jelly</label>
-									</div>		 -->							
 									<div class="6u$ 12u$(small)">
-										<input type="checkbox" id="jelly" name="ingredients[]" value="4" >
-										<label for="jelly">Jelly</label>
+										<input type="checkbox" id="coconut" name="ingredients[]" value="4" >
+										<label for="coconut">coconut</label>
 										<input type="checkbox" id="milk" name="ingredients[]" value="5" >
-										<label for="milk">Milk</label>
-									</div>									
-									<!-- <div class="6u$ 12u$(small)">
-										<input type="checkbox" id="demo-jam" name="ingredients[]" value="5" >
-										<label for="demo-jam">Jam</label>
-									</div> -->
+										<label for="milk">milk</label>
+										<input type="checkbox" id="fruit" name="ingredients[]" value="6" >
+										<label for="fruit">fruit</label>
+									</div>
+									<div class="6u$ 12u$(small)">
+										<input type="checkbox" id="honey" name="ingredients[]" value="7" >
+										<label for="honey">honey</label>
+										<input type="checkbox" id="matcha" name="ingredients[]" value="8" >
+										<label for="matcha">matcha</label>
+										<input type="checkbox" id="red_bean" name="ingredients[]" value="9" >
+										<label for="red_bean">red bean</label>
+									</div>
+									<div class="6u$ 12u$(small)">
+										<input type="checkbox" id="taro" name="ingredients[]" value="10" >
+										<label for="taro">taro</label>
+										<input type="checkbox" id="cream" name="ingredients[]" value="11" >
+										<label for="cream">cream</label>
+										<input type="checkbox" id="jelly" name="ingredients[]" value="12" >
+										<label for="jelly">jelly</label>
+									</div>
+									<div class="6u$ 12u$(small)">
+										<input type="checkbox" id="jujube" name="ingredients[]" value="13" >
+										<label for="jujube">jujube</label>
+										<input type="checkbox" id="cocoa" name="ingredients[]" value="14" >
+										<label for="cocoa">cocoa</label>
+										<input type="checkbox" id="chocolate" name="ingredients[]" value="15" >
+										<label for="chocolate">chocolate</label>
+									</div>
+
 									<br>
 
 <!--       <div class="col-sm-7">
@@ -155,8 +174,9 @@
 					$item_num = 0;
 					$i_id1 = -1;$i_id2 = -1;$i_id3 = -1;$i_id4 = -1;$i_id5 = -1;
 					$coldhot = mysqli_real_escape_string($link, $_POST['coldhot']);
-					$sweetness = mysqli_real_escape_string($link, (int)$_POST['sweetness']);
-
+					$sweetness = $_POST['sweetness'];
+					//$sweetness = mysqli_real_escape_string($link, (int)$_POST['sweetness']);
+					//Print '<script>alert("coldhot:"+"'.$coldhot.'"+"'.$sweetness.'");</script>'; 
 					$dIDs = [];
 					$drinks = mysqli_query($link, "SELECT drinkID FROM drinks");
 					while($dr = mysqli_fetch_assoc($drinks)){
@@ -199,13 +219,10 @@
 							$dIDs = array_diff($dIDs, $alDRTemp);
 					}
 
-					
-
-
 
 						// $result = mysqli_query($link, "SELECT DISTINCT drinkID,drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
 						mysqli_close ($link );
-
+						
 						$mysqli = new mysqli("localhost", "root", "", "first_db");
 
 						if (!$mysqli->query("DROP TABLE IF EXISTS new_table2") || !$mysqli->query("CREATE TABLE new_table2(
@@ -228,8 +245,9 @@
 											        DECLARE currdrinkID int(11);
 											        DECLARE drinkIDcur CURSOR FOR (select drinkID
 																					from drinks 
-																					where sweetness='$sweetness' and hot_cold='$coldhot'
-																						and drinkID in 
+																					where sweetness in (".implode(',', $sweetness).")
+																					and hot_cold='$coldhot'
+																					and drinkID in 
 																						(".implode(',', $dIDs)."));
 											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 
@@ -273,7 +291,8 @@
 											        DECLARE currdrinkID int(11);
 											        DECLARE drinkIDcur CURSOR FOR (select drinkID
 																					from drinks 
-																					where sweetness='$sweetness' and hot_cold='$coldhot'
+																					where sweetness in (".implode(',', $sweetness).")
+																					and hot_cold='$coldhot'
 																						and drinkID in 
 																						(".implode(',', $dIDs)."));
 											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
@@ -307,11 +326,11 @@
 						
 
 						$mysqli -> close();
-
+						
 						$link = mysqli_connect("localhost", "root", "", "first_db");
 						while($row = mysqli_fetch_array($result)){ 
 						//while($row = $result->fetch_assoc()){ 
-							$image_path = "assets/images/thumbs/".$row['drinkID'].".jpg";
+							$image_path = "assets/images/thumbs/".$row['drinkID'].".png";
 							$drink_path = "drinks/".$row['drinkID'].".php";			
 							$dname = $row['drinkName'];
 							$rating = $row['avg_ratings'];
@@ -326,25 +345,137 @@
 							</article>
 
 						<?php }
+						mysqli_close ( $link );
 
 					}else{
-						$result = mysqli_query($link, "SELECT DISTINCT drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot'"); 
+
+						
+
+						$mysqli = new mysqli("localhost", "root", "", "first_db");
+
+						if (!$mysqli->query("DROP TABLE IF EXISTS new_table2") || !$mysqli->query("CREATE TABLE new_table2(
+											            drinkID int(11), 
+											            
+											            sum_calories int(11))")) {
+						    //echo "Table1 creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
+						}
+
+						if (!$mysqli->query("DROP TABLE IF EXISTS new_table") || !$mysqli->query("CREATE TABLE new_table(
+											            drinkID int(11), 
+											            drinkName VARCHAR(255), 
+											            avg_ratings REAL)")) {
+						    //echo "Table1 creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
+						}
+
+						if (!$mysqli->query("DROP PROCEDURE IF EXISTS GetAverage") ||
+						    !$mysqli->query("CREATE PROCEDURE GetAverage() BEGIN 
+						    						DECLARE done int default 0;
+											        DECLARE currdrinkID int(11);
+											        DECLARE drinkIDcur CURSOR FOR (select drinkID
+																					from drinks 
+																					where sweetness in (".implode(',', $sweetness).") 
+																					and hot_cold='$coldhot'
+																						);
+											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+
+											        OPEN drinkIDcur;
+											        REPEAT
+											            FETCH drinkIDcur INTO currdrinkID;
+											            INSERT INTO new_table
+											            (SELECT DISTINCT drinkID, drinkName, AVG(ratings) AS avg_ratings
+											             FROM ratings 
+											             WHERE drinkID=currdrinkID
+											             GROUP BY drinkID);          
+											    UNTIL done
+											    END REPEAT;
+											    CLOSE drinkIDcur;
+											    
+											    ALTER TABLE new_table ADD Grade VARCHAR(10) NULL;
+											    UPDATE new_table
+											    SET Grade='A'
+											    WHERE avg_ratings>=8;
+											    UPDATE new_table
+											    SET Grade='B'
+											    WHERE (avg_ratings>=6)AND(avg_ratings<8);
+											    UPDATE new_table
+											    SET Grade='C'
+											    WHERE avg_ratings<6;
+											    END;")) 
+						{
+						    //echo "Stored procedure creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
+						}
+
+						if (!$mysqli->query("CALL GetAverage()")) {
+						    //echo "CALL failed: (" . $mysqli->errno . ") " . $mysqli->error;
+						}
+
+
+					
+
+						if (!$mysqli->query("DROP PROCEDURE IF EXISTS GetSum") ||
+						    !$mysqli->query("CREATE PROCEDURE GetSum() BEGIN
+											        DECLARE done int default 0;
+											        DECLARE currdrinkID int(11);
+											        DECLARE drinkIDcur CURSOR FOR (select drinkID
+																					from drinks 
+																					where sweetness in (".implode(',', $sweetness).")
+																					 and hot_cold='$coldhot'
+																						);
+											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
+	
+											        
+											        OPEN drinkIDcur;
+											        REPEAT
+											            FETCH drinkIDcur INTO currdrinkID;
+											            INSERT INTO new_table2
+											            (SELECT DISTINCT drinkID, SUM(ingredientCalories) AS sum_calories
+											            FROM toppings natural join ingredients
+											             WHERE drinkID=currdrinkID            
+											            GROUP BY drinkID);                  
+											    UNTIL done
+											    END REPEAT;
+											    CLOSE drinkIDcur;
+											    
+												END;")) 
+						{
+						    //echo "Stored procedure creation failed: (" . $mysqli->errno . ") " . $mysqli->error;
+						}
+
+						if (!$mysqli->query("CALL GetSum()")) {
+						    //echo "CALL failed: (" . $mysqli->errno . ") " . $mysqli->error;
+						}
+
+
+						if (!($result = $mysqli->query("SELECT DISTINCT * FROM new_table natural join new_table2 order by avg_ratings DESC"))) {
+						    //echo "SELECT failed: (" . $mysqli->errno . ") " . $mysqli->error;
+						}
+						
+
+						$mysqli -> close();
+						
+						$link = mysqli_connect("localhost", "root", "", "first_db");
 						while($row = mysqli_fetch_array($result)){ 
-							$image_path = "assets/images/thumbs/".$row['drinkID'].".jpg";
-							$drink_path = "drink".$row['drinkID'].".php";		
+						//while($row = $result->fetch_assoc()){ 
+							$image_path = "assets/images/thumbs/".$row['drinkID'].".png";
+							$drink_path = "drinks/".$row['drinkID'].".php";			
 							$dname = $row['drinkName'];
-							$sname = $row['storeName'];	
+							$rating = $row['avg_ratings'];
+							$grade = $row['Grade'];
+							$calories = $row['sum_calories'];
 						?>
 							<article class="6u 12u$(xsmall) work-item">
 								<a href="<?php echo $image_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
-								<h3><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a></h3>
-								<p><?php Print "$sname"?></p>
+								<h2><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a> <p><?php Print "Rating:   $grade"?></p> </h2>
+								</p><?php Print "Calories:   $calories"?></p> 
+								
 							</article>
 
-						<?php  }
+						<?php }
+						mysqli_close ( $link );
+
 					}
 				}
-				mysqli_close ($link );
+			
 			?>
 
 
@@ -359,7 +490,7 @@
 			</div>
 
 		<!-- Footer -->
-			<footer id="footer">
+<!-- 			<footer id="footer">
 				<div class="inner">
 					<ul class="icons">
 						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
@@ -368,7 +499,7 @@
 						<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
 					</ul>
 			</div>
-           </footer>
+           </footer> -->
 		<!-- Footer -->
 			
 

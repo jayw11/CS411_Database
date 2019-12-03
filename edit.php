@@ -21,13 +21,18 @@
 	<body id="top" >
 
 		<!-- Header -->
-			<header id="header">
+				<header id="header">
 				<div class="inner">
 					<a href="#" class="image avatar"><img src="assets/images/avatar.jpg" alt="" /></a>
 					<h1><strong>Hi <?php Print "$user"?>!</br></br></h1>
 					<h2><a href="select.php" style="text-decoration:none;">Search</strong></a></h2>
 					<h2><a href="edit.php" style="text-decoration:none;">Setting</strong></a></h2>
-				</div>
+					<h2><a href="rate.php" style="text-decoration:none;">Rate</strong></a></h2>
+					<h2><a href="recommendations.php" style="text-decoration:none;">Recommend</strong></a></h2>
+					<br><br><br>
+
+ 				 	<h5><a href="index.php">Log out</strong></a></h5>
+ 				</div>
 			</header>
 
 		<!-- Main -->
@@ -149,7 +154,7 @@
 			</div>
 
 		<!-- Footer -->
-			<footer id="footer">
+<!-- 			<footer id="footer">
 				<div class="inner">
 					<ul class="icons">
 						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
@@ -158,7 +163,7 @@
 						<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
 					</ul>
 				</div>
-           </footer>
+           </footer> -->
 		<!-- Footer -->
 			
 
@@ -176,6 +181,17 @@
 
 
 <?php
+require_once __DIR__ .'/vendor/autoload.php';
+use GraphAware\Neo4j\Client\ClientBuilder;
+
+$config = \GraphAware\Bolt\Configuration::newInstance()
+->withCredentials('lidingl2', 'b.iMdymGhdGYaM.wlkebHGSvwjzWA5F')
+->withTimeout(10)
+->withTLSMode(\GraphAware\Bolt\Configuration::TLSMODE_REQUIRED);
+
+$driver = \GraphAware\Bolt\GraphDatabase::driver('bolt://hobby-efdadablacmmgbkedjegaddl.dbs.graphenedb.com:24787', $config);
+$client = $driver->session();
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$link = mysqli_connect("localhost", "root", "", "first_db");
 
@@ -188,7 +204,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$d_info = $_POST['d_info'];
 	$u1_info = $_POST['u1_info'];
 	$u2_info = $_POST['u2_info'];
-
 	$selected_val1 = $_POST['insert'];  // Storing Selected Value In Variable
 	//echo '<script type="text/javascript"> alert("'.$selected_val1.'")</script>';
 	$selected_val2 = $_POST['delete'];  // Storing Selected Value In Variable
@@ -199,19 +214,31 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$result = mysqli_query($link, "select * from ingredients where ingredientName = '$i_info' "); 
 		$row = mysqli_fetch_array($result);
 		$row2 = (int)$row['ingredientID'];
+		//Print '<script>alert("'.$userid.'"+"'.$row2.'"+"'.$selected_val1.'");</script>';
 		if ($selected_val1 == "allergies"){
 			$query = mysqli_query($link, "INSERT INTO allergies (userID, ingredientID) VALUES ('$userid', '$row2')"); 
 		}
 		if ($selected_val1 == "favorite_drinks"){
-			$query = mysqli_query($link, "INSERT INTO favorite_drinks (userID, drinkID) VALUES ('$userid', '$row2')"); 
+			$query = mysqli_query($link, "INSERT INTO favorite_drinks (userID, drinkID) VALUES ('$userid', '$row2')");
+			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.type = '$i_info' RETURN EXISTS((p)-[:FAVORITE]->(d)) AS flag");
+			$flag = $result->firstRecord()->get('flag');
+			if(!$flag){
+				$client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.type = '$i_info' CREATE (p)-[f:FAVORITE]->(d)");
+			} 
 		}
-		if ($selected_val1 == "allergies"){
+		if ($selected_val1 == "favorite_ingredients"){
 			$query = mysqli_query($link, "INSERT INTO favorite_ingredients (userID, ingredientID) VALUES ('$userid', '$row2')"); 
+		}
+		if ($selected_val1 == "friend"){
+			$result = $client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$i_info' RETURN EXISTS((p1)-[:FRIEND]->(p2)) AS flag");
+			$flag = $result->firstRecord()->get('flag');
+			if(!$flag){
+				$client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$i_info' CREATE (p1)-[f:FRIEND]->(p2)");
+			}
 		}
 	}
 
 	if( isset ( $d_info ) ) { 
-		
 		$result2 = mysqli_query($link, "select * from ingredients where ingredientName = '$d_info' "); 
 		$row3 = mysqli_fetch_array($result2);
 		$row4 = (int)$row3['ingredientID'];
@@ -219,10 +246,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			$query = mysqli_query($link, "DELETE FROM allergies where ingredientID = '$row4'"); 
 		}
 		if ($selected_val2 == "favorite_drinks"){
-			$query = mysqli_query($link, "DELETE FROM favorite_drinks where drinkID = '$row4'"); 
+			$query = mysqli_query($link, "DELETE FROM favorite_drinks where drinkID = '$row4'");
+			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.type = '$d_info' RETURN EXISTS((p)-[:FAVORITE]->(d)) AS flag");
+			$flag = $result->firstRecord()->get('flag');
+			if($flag){
+				$client->run("MATCH (p:Person)-[f:FAVORITE]->(d:Drink) WHERE p.name = '$user' AND d.type = '$d_info' DELETE f");
+			} 
 		}
-		if ($selected_val2 == "allergies"){
+		if ($selected_val2 == "favorite_ingredients"){
 			$query = mysqli_query($link, "DELETE FROM favorite_ingredients where ingredientID = '$row4'"); 
+		}
+		if ($selected_val2 == "friend"){
+			$result = $client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$d_info' RETURN EXISTS((p1)-[:FRIEND]->(p2)) AS flag");
+			$flag = $result->firstRecord()->get('flag');
+			if($flag){
+				$client->run("MATCH (p1:Person)-[f:FRIEND]->(p2:Person) WHERE p1.name = '$user' AND p2.name = '$d_info' DELETE f");
+			}
 		}
 	}
 	if( isset ( $u1_info ) and  isset ( $u2_info )) { 
