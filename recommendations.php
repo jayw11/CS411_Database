@@ -138,7 +138,7 @@
 			
 		?>
 			<article class="6u 12u$(xsmall) work-item">
-				<a href="<?php echo $image_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
+				<a href="<?php echo $drink_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
 				<h2><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a></h2>
 					
 			</article>
