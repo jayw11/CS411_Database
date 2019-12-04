@@ -159,7 +159,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		$result = mysqli_query($link, "select drinkName from drinks where drinkID = '$did' "); 
 		$row = mysqli_fetch_array($result);
 		$dn = $row['drinkName'];
-		Print '<script>alert("info:"+"'.$did.'"+"info:"+"'.$dn.'"+"info:"+"'.$userid.'"+"info:"+"'.$i_info.'");</script>'; 
+		//Print '<script>alert("info:"+"'.$did.'"+"info:"+"'.$dn.'"+"info:"+"'.$userid.'"+"info:"+"'.$i_info.'");</script>'; 
 		$query = mysqli_query($link, "INSERT INTO ratings (drinkID, drinkName, userID, ratings) VALUES ('$did', '$dn','$userid','$i_info')"); 
 	}
 }

@@ -80,17 +80,17 @@
 									<div class="6u 12u$(small)">
 										<input type="checkbox" id="sweet0" name="sweetness[]" value="0" checked>
 										<label for="sweet0">0</label>
-										<input type="checkbox" id="sweet20" name="sweetness[]" value="20" >
+										<input type="checkbox" id="sweet20" name="sweetness[]" value="20" checked>
 										<label for="sweet20">20</label>
-										<input type="checkbox" id="sweet40" name="sweetness[]" value="40" >
+										<input type="checkbox" id="sweet40" name="sweetness[]" value="40" checked>
 										<label for="sweet40">40</label>
 									</div>
 									<div class="6u$ 12u$(small)">
-										<input type="checkbox" id="sweet60" name="sweetness[]" value="60" >
+										<input type="checkbox" id="sweet60" name="sweetness[]" value="60" checked>
 										<label for="sweet60">60</label>
-										<input type="checkbox" id="sweet80" name="sweetness[]" value="80" >
+										<input type="checkbox" id="sweet80" name="sweetness[]" value="80" checked>
 										<label for="sweet80">80</label>
-										<input type="checkbox" id="sweet100" name="sweetness[]" value="100" >
+										<input type="checkbox" id="sweet100" name="sweetness[]" value="100" checked>
 										<label for="sweet100">100</label>
 									</div>
 
@@ -320,7 +320,7 @@
 						}
 
 
-						if (!($result = $mysqli->query("SELECT DISTINCT * FROM new_table natural join new_table2 order by avg_ratings DESC"))) {
+						if (!($result = $mysqli->query("SELECT DISTINCT * FROM new_table natural join new_table2 order by Grade, sum_calories"))) {
 						    //echo "SELECT failed: (" . $mysqli->errno . ") " . $mysqli->error;
 						}
 						
@@ -328,6 +328,7 @@
 						$mysqli -> close();
 						
 						$link = mysqli_connect("localhost", "root", "", "first_db");
+						if (!$result) { exit();}
 						while($row = mysqli_fetch_array($result)){ 
 						//while($row = $result->fetch_assoc()){ 
 							$image_path = "assets/images/thumbs/".$row['drinkID'].".png";
@@ -446,7 +447,7 @@
 						}
 
 
-						if (!($result = $mysqli->query("SELECT DISTINCT * FROM new_table natural join new_table2 order by avg_ratings DESC"))) {
+						if (!($result = $mysqli->query("SELECT DISTINCT * FROM new_table natural join new_table2 order by Grade, sum_calories"))) {
 						    //echo "SELECT failed: (" . $mysqli->errno . ") " . $mysqli->error;
 						}
 						
@@ -454,6 +455,7 @@
 						$mysqli -> close();
 						
 						$link = mysqli_connect("localhost", "root", "", "first_db");
+						if (!$result) { exit();}
 						while($row = mysqli_fetch_array($result)){ 
 						//while($row = $result->fetch_assoc()){ 
 							$image_path = "assets/images/thumbs/".$row['drinkID'].".png";

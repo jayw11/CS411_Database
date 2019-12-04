@@ -126,13 +126,15 @@
 	}
 ?>
 
-
+<section>
+	<div class="row">
 <?php 
 	$link =  mysqli_connect("localhost", "root", "", "first_db");
 	$result = mysqli_query($link, "SELECT DISTINCT drinkName, drinkID FROM drinks WHERE drinkID in (".implode(',', $recommends).") "); 
 	while($row = mysqli_fetch_array($result)){ 
 			$image_path = "assets/images/thumbs/".$row['drinkID'].".png";	
 			$dname = $row['drinkName'];
+			$drink_path = "drinks/".$row['drinkID'].".php";	
 			
 		?>
 			<article class="6u 12u$(xsmall) work-item">
@@ -146,8 +148,9 @@
 
 
 ?>
+		</div>
 	</div>
-
+</section>
 
 	<!-- Footer -->
 <!-- 	<footer id="footer">
