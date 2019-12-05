@@ -6,37 +6,37 @@
 
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="assets/css/login_util.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/login.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/login2.css">
 <!--===============================================================================================-->
 </head>
 <body>
 	
-	<div class="container-login100" style="background-image: url('assets/images/bg1.jpg');">
+	<div class="container-login" style="background-image: url('assets/images/bg1.jpg');">
 
-		<div class="wrap-login100 p-l-55 p-r-55 p-t-80 p-b-30">
-			<span class="login100-form-title p-b-37">
+		<div class="wrap-login p-l-55 p-r-55 p-t-80 p-b-30">
+			<span class="login-form-title p-b-37">
 					BobaCoffee
 			</span>
-			<form class="login100-form validate-form" action="signup.php" method="post">
-				<span class="login100-form-title p-b-37">
+			<form class="login-form validate-form" action="signup.php" method="post">
+				<span class="login-form-title p-b-37">
 					
 					Sign Up
 				</span>
 
-				<div class="wrap-input100 m-b-25">
-					<input class="input100" type="text" name="username" placeholder="username" required="required">
-					<span class="focus-input100"></span>
+				<div class="wrap-input m-b-25">
+					<input class="input" type="text" name="username" placeholder="username" required="required">
+					<span class="focus-input"></span>
 				</div>
-				<div class="wrap-input100 m-b-25">
-					<input class="input100" type="password" name="password" placeholder="password" required="required">
-					<span class="focus-input100"></span>
+				<div class="wrap-input m-b-25">
+					<input class="input" type="password" name="password" placeholder="password" required="required">
+					<span class="focus-input"></span>
 				</div>
 				<br>
-				<div class="container-login100-form-btn">
-					<!-- <button class="login100-form-btn">
+				<div class="container-login-form-btn">
+					<!-- <button class="login-form-btn">
 						Sign Up
 					</button> -->
-					<input class="login100-form-btn" type="submit" value="Sign Up"/>
+					<input class="login-form-btn" type="submit" value="Sign Up"/>
 				</div>
 				
 				<br><br>

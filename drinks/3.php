@@ -39,23 +39,17 @@
 		<!-- Main -->
 			<div id="main">
 
-					<!-- One -->
+					
 					<section id="one">
 						<header class="major">
 							<h2>Latte<br />
 							 </h2>
 						</header>
-<!-- 
-					</section> -->
 
     
-						<!-- <section> -->
-						<div class="box alt">
-								<div class="row 50% uniform">
+					
 									<div class="12u$"><span class="image fit"><img src="../assets/images/thumbs/3.png" alt="" /></span></div>
 									
-								</div>
-							</div>
 						</section>
 
 

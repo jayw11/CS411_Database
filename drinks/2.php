@@ -38,23 +38,16 @@
 		<!-- Main -->
 			<div id="main">
 
-					<!-- One -->
+					
 					<section id="one">
 						<header class="major">
 							<h2>Mocha<br />
 							 </h2>
 						</header>
-<!-- 
-					</section> -->
 
-    
-						<!-- <section> -->
-						<div class="box alt">
-								<div class="row 50% uniform">
+						
 									<div class="12u$"><span class="image fit"><img src="../assets/images/thumbs/2.png" alt="" /></span></div>
-									
-								</div>
-							</div>
+							
 						</section>
 
 

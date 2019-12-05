@@ -44,17 +44,10 @@
 							<h2>KF Milk Tea<br />
 							 </h2>
 						</header>
-<!-- 
-					</section> -->
 
-    
-						<!-- <section> -->
-						<div class="box alt">
-								<div class="row 50% uniform">
 									<div class="12u$"><span class="image fit"><img src="../assets/images/thumbs/10.png" alt="" /></span></div>
 									
-								</div>
-							</div>
+								
 						</section>
 
 
