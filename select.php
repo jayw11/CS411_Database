@@ -350,7 +350,29 @@
 
 					}else{
 
-						
+					$dIDs = [];
+					$drinks = mysqli_query($link, "SELECT drinkID FROM drinks");
+					while($dr = mysqli_fetch_assoc($drinks)){
+						$dIDs[] = $dr['drinkID'];
+					}
+		
+
+					$alIDs = [];
+					$alIn = mysqli_query($link, "SELECT ingredientID FROM allergies natural join users where username='$user' ");
+					while($al = mysqli_fetch_assoc($alIn)){
+						$alIDs[] = $al['ingredientID'];
+					}
+
+					foreach ($alIDs as $alID){
+							// Print '<script>alert("alID!"+"'.$alID.'");</script>'; 
+							$alDR= mysqli_query($link, "SELECT drinkID FROM toppings WHERE ingredientID='$alID'");
+							$alDRTemp = [];
+							while($adr = mysqli_fetch_assoc($alDR)){
+								$alDRTemp[] = $adr['drinkID'];
+							}
+							$dIDs = array_diff($dIDs, $alDRTemp);
+					}
+
 
 						$mysqli = new mysqli("localhost", "root", "", "first_db");
 
@@ -376,7 +398,8 @@
 																					from drinks 
 																					where sweetness in (".implode(',', $sweetness).") 
 																					and hot_cold='$coldhot'
-																						);
+																					and drinkID in 
+																						(".implode(',', $dIDs)."));
 											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 
 											        OPEN drinkIDcur;
@@ -420,7 +443,9 @@
 											        DECLARE drinkIDcur CURSOR FOR (select drinkID
 																					from drinks 
 																					where sweetness in (".implode(',', $sweetness).")
-																					 and hot_cold='$coldhot'
+																					 and hot_cold='$coldhot' 
+																					 and drinkID in 
+																						(".implode(',', $dIDs).")
 																						);
 											        DECLARE CONTINUE HANDLER FOR NOT FOUND SET done=1;
 	
