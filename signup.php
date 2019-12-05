@@ -42,7 +42,7 @@
 				<br><br>
 
 				<div class="text-center">
-					<a href="signup.php" class="txt2 hov1">
+					<a href="index.php" class="txt2 hov1">
 						Sign In
 					</a>
 				</div>

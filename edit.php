@@ -1,11 +1,11 @@
 <?php
-	session_start(); //starts the session
-	if($_SESSION['user']){ //checks if user is logged in
+	session_start();
+	if($_SESSION['user']){ 
 	}
 	else{
-		header("location:index.php"); // redirects if user is not logged in
+		header("location:index.php"); 
 	}
-	$user = $_SESSION['user']; //assigns user value
+	$user = $_SESSION['user']; 
 	$id_exists = false;
 ?>
 <html >
@@ -13,14 +13,14 @@
 		<title>EDIT profile</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+		
 		<link rel="stylesheet" href="assets/css/main2.css" />
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		
 	</head>
 
 	<body id="top" >
 
-		<!-- Header -->
+		
 				<header id="header">
 				<div class="inner">
 					<a href="#" class="image avatar"><img src="assets/images/avatar.jpg" alt="" /></a>
@@ -35,10 +35,10 @@
  				</div>
 			</header>
 
-		<!-- Main -->
+		
 			<div id="main">
 
-					<!-- One -->
+					
 					<section id="one">
 						<header class="major">
 							<h2>Update your Account information.<br />
@@ -63,18 +63,18 @@
 	  <br><br>
 	  <label for="update info" class="col-sm-2 control-label">Into  </label>
 
-		<!-- <div class="12u$"> -->
+		
 			<div class="select-wrapper">
 				<select name="insert" id="insert" >
 					<option value="0">Select one</option>
-					<!-- <option value="1">friends ID</option> -->
+					
 						    <option value="allergies">allergies</option>
 						    <option value="favorite_drinks">favorite drinks</option>
-						   <!--  <option value="favorite_ingredients">favorite ingredients</option> -->
+						  
 						    <option value="friend">friend</option>
 				</select>
 			</div>
-		<!-- </div> -->
+		
 
      </div>
    </div> 
@@ -83,7 +83,6 @@
 
 	
 
-<!-- 	<form class="form-horizontal" role="form" style="padding-top:60px;padding-left: 0px;"> -->
  
 		<div class="form-group">
 		  <div class="row">
@@ -96,21 +95,21 @@
 			<br><br>
 			<label for="update info" class="col-sm-2 control-label">From</label>
 	  
-			  <!-- <div class="12u$"> -->
+			
 				  <div class="select-wrapper">
 					  <select name="delete" id="delete" >
 						  <option value="0">Select one</option>
-						  <!-- <option value="1">friends ID</option> -->
+						 
 						    <option value="allergies">allergies</option>
 						    <option value="favorite_drinks">favorite drinks</option>
-						    <!-- <option value="favorite_ingredients">favorite ingredients</option> -->
+						    
 						    <option value="friend">friend</option>
 						   
 					  </select>
 				  </div>
 			  </div>
 	  
-		  <!--  </div> -->
+		  
 		 </div> 
   
   <br><br>
@@ -127,16 +126,16 @@
 		<br><br>
 				<label for="update info" class="col-sm-2 control-label">From</label>
 		
-				<!-- <div class="12u$"> -->
+				
 					<div class="select-wrapper">
 						<select name="update" id="update" >
 							<option value="0">Select one</option>
-							<!-- <option value="Select one">friends ID</option> -->
+							
 						    <option value="allergies">allergies</option>
 						    <option value="favorite_drinks">favorite drinks</option>
-						   <!--  <option value="favorite_ingredients">favorite ingredients</option> -->
+						   
 						</select>
-					<!-- </div> -->
+					
 				</div>
 
 	</div>
@@ -156,27 +155,7 @@
     </div>
 			</div>
 
-		<!-- Footer -->
-<!-- 			<footer id="footer">
-				<div class="inner">
-					<ul class="icons">
-						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
-						<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
-						<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
-					</ul>
-				</div>
-           </footer> -->
-		<!-- Footer -->
 			
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.poptrox.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
 
  
 	</body>
@@ -198,7 +177,7 @@ $client = $driver->session();
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$link = mysqli_connect("localhost", "root", "", "first_db");
 
-	//$username = mysqli_real_escape_string($link, $_POST['username']);
+	
 	$uid = mysqli_query($link, "SELECT userID FROM users WHERE username='$user'");
 	$dr = mysqli_fetch_assoc($uid);
 	$userid = $dr['userID'];
@@ -207,23 +186,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 	$d_info = $_POST['d_info'];
 	$u1_info = $_POST['u1_info'];
 	$u2_info = $_POST['u2_info'];
-	$selected_val1 = $_POST['insert'];  // Storing Selected Value In Variable
-	//echo '<script type="text/javascript"> alert("'.$selected_val1.'")</script>';
-	$selected_val2 = $_POST['delete'];  // Storing Selected Value In Variable
-	//echo '<script type="text/javascript"> alert("'.$selected_val2.'")</script>';
-	$selected_val3 =  $_POST['update'];  // Storing Selected Value In Variable
-	//echo '<script type="text/javascript"> alert("'.$selected_val3.'")</script>';
+	$selected_val1 = $_POST['insert'];  
+
+	$selected_val2 = $_POST['delete']; 
+
+	$selected_val3 =  $_POST['update'];  
+
 	if( isset ( $i_info ) ) { 
 		$result = mysqli_query($link, "select * from ingredients where ingredientName = '$i_info' "); 
 		$row = mysqli_fetch_array($result);
 		$row2 = (int)$row['ingredientID'];
-		//Print '<script>alert("'.$userid.'"+"'.$row2.'"+"'.$selected_val1.'");</script>';
+		
 		if ($selected_val1 == "allergies"){
 			$query = mysqli_query($link, "INSERT INTO allergies (userID, ingredientID) VALUES ('$userid', '$row2')"); 
 		}
 		if ($selected_val1 == "favorite_drinks"){
-			//$i_info2 = (int)$i_info;
-			//$query = mysqli_query($link, "INSERT INTO favorite_drinks (userID, drinkID) VALUES ('$userid', '$row2')");
+			
 			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.name = '$i_info' RETURN EXISTS((p)-[:FD]->(d)) AS flag");
 			$flag = $result->firstRecord()->get('flag');
 			if(!$flag){
@@ -249,16 +227,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 			$query = mysqli_query($link, "DELETE FROM allergies where ingredientID = '$row4'"); 
 		}
 		if ($selected_val2 == "favorite_drinks"){
-			//$query = mysqli_query($link, "DELETE FROM favorite_drinks where drinkID = '$row4'");
+			
 			$result = $client->run("MATCH (p:Person), (d:Drink) WHERE p.name = '$user' AND d.name = '$d_info' RETURN EXISTS((p)-[:FD]->(d)) AS flag");
 			$flag = $result->firstRecord()->get('flag');
 			if($flag){
 				$client->run("MATCH (p:Person)-[f:FD]->(d:Drink) WHERE p.name = '$user' AND d.name = '$d_info' DELETE f");
 			} 
 		}
-		// if ($selected_val2 == "favorite_ingredients"){
-		// 	$query = mysqli_query($link, "DELETE FROM favorite_ingredients where ingredientID = '$row4'"); 
-		// }
 		if ($selected_val2 == "friend"){
 			$result = $client->run("MATCH (p1:Person), (p2:Person) WHERE p1.name = '$user' AND p2.name = '$d_info' RETURN EXISTS((p1)-[:FriendWith]->(p2)-[:FriendWith]->(p1)) AS flag");
 			$flag = $result->firstRecord()->get('flag');
@@ -281,9 +256,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 		if ($selected_val3 == "favorite_drinks"){
 			$query = mysqli_query($link, "UPDATE favorite_drinks SET drinkID = '$row8' where userID = '$userid'  and ingredientID = '$row6'");
 		}
-		// if ($selected_val3 == "favorite_ingredients"){
-		// 	$query = mysqli_query($link, "UPDATE favorite_ingredients SET ingredientID = '$row8' where userID = '$userid'  and ingredientID = '$row6'");  
-		// }
-	}
+
+}
 }
 ?>

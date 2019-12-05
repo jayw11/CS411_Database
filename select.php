@@ -53,8 +53,7 @@
  <form class="form-horizontal" action="select.php" method="post" role="form" style="padding-top:40px;padding-left: 0px;">
  
 
-<!-- cold/warm
- -->
+<!-- cold/warm-->
 	<section id="cold/warm">
 	  <fieldset id="group1">
 	<label for="tel" class="col-sm-2 control-label"> Cold/Hot </label>
@@ -71,8 +70,7 @@
 
   
   <br>
-<!-- sweetness
- -->     
+<!-- sweetness-->     
 <section id="sweetness">
   <fieldset id="group2">
  <label for="tel" class="col-sm-2 control-label"> Sweetness </label>
@@ -100,8 +98,8 @@
   <br>
 
 
-<!-- toppings
- -->  <div class="form-group">
+<!-- topping -->  
+<div class="form-group">
     <div class="row">
       <label for="tel" class="col-sm-2 control-label">What do you want</label>
       								</div>
@@ -148,9 +146,6 @@
 
 									<br>
 
-<!--       <div class="col-sm-7">
-        <input type="text" class="form-control" id="tel" style="padding-right: 100px" placeholder="telephone">
-      </div> -->
        <div class="form-group" style="padding-top: 30px;">
 		<ul class="actions">
 			<input type="submit" value="Search" class = "button special"/>
@@ -169,14 +164,13 @@
 				<?php
 				if($_SERVER["REQUEST_METHOD"] == "POST"){
 					$link = mysqli_connect("localhost", "root", "", "first_db");
-					//$username = mysqli_real_escape_string($link, $_POST['username']);
+					
 					$userid = 1;
 					$item_num = 0;
 					$i_id1 = -1;$i_id2 = -1;$i_id3 = -1;$i_id4 = -1;$i_id5 = -1;
 					$coldhot = mysqli_real_escape_string($link, $_POST['coldhot']);
 					$sweetness = $_POST['sweetness'];
-					//$sweetness = mysqli_real_escape_string($link, (int)$_POST['sweetness']);
-					//Print '<script>alert("coldhot:"+"'.$coldhot.'"+"'.$sweetness.'");</script>'; 
+					
 					$dIDs = [];
 					$drinks = mysqli_query($link, "SELECT drinkID FROM drinks");
 					while($dr = mysqli_fetch_assoc($drinks)){
@@ -202,25 +196,19 @@
 					}
 
 					foreach ($alIDs as $alID){
-							// Print '<script>alert("alID!"+"'.$alID.'");</script>'; 
+							
 							$alDR= mysqli_query($link, "SELECT drinkID FROM toppings WHERE ingredientID='$alID'");
 							$alDRTemp = [];
 							while($adr = mysqli_fetch_assoc($alDR)){
 								$alDRTemp[] = $adr['drinkID'];
-								// foreach ($alDRTemp as $alDRTemps){
-							
-								// 		Print '<script>alert("alDRTemps!"+"'.$alDRTemps.'");</script>'; 
-								// }
+								
 							}
-							// foreach ($dIDs as $did){
-							
-							// Print '<script>alert("did!"+"'.$did.'");</script>'; 
-							// }
+					
 							$dIDs = array_diff($dIDs, $alDRTemp);
 					}
 
 
-						// $result = mysqli_query($link, "SELECT DISTINCT drinkID,drinkName, steps, storeName FROM drinks NATURAL JOIN sells NATURAL JOIN stores NATURAL JOIN recipes WHERE sweetness = '$sweetness' AND hot_cold = '$coldhot' AND drinkID IN (".implode(',', $dIDs).")"); 
+						
 						mysqli_close ($link );
 						
 						$mysqli = new mysqli("localhost", "root", "", "first_db");
@@ -339,7 +327,7 @@
 							$calories = $row['sum_calories'];
 						?>
 							<article class="6u 12u$(xsmall) work-item">
-								<a href="<?php echo $image_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
+								<a href="<?php echo $drink_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
 								<h2><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a> <p><?php Print "Rating:   $grade"?></p> </h2>
 								</p><?php Print "Calories:   $calories"?></p> 
 								
@@ -491,7 +479,7 @@
 							$calories = $row['sum_calories'];
 						?>
 							<article class="6u 12u$(xsmall) work-item">
-								<a href="<?php echo $image_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
+								<a href="<?php echo $drink_path ?>" class="image fit thumb"><img src="<?php echo $image_path ?>" alt="" /></a>
 								<h2><a href="<?php echo $drink_path ?>"><?php Print "$dname"?></a> <p><?php Print "Rating:   $grade"?></p> </h2>
 								</p><?php Print "Calories:   $calories"?></p> 
 								
@@ -505,39 +493,11 @@
 			
 			?>
 
-
-					
-						<!-- <ul class="actions">
-							<li><a href="#" class="button">Full Portfolio</a></li>
-						</ul> -->
 					</section>
 
     <hr style="margin-top: 100px;">
     </div>
 			</div>
-
-		<!-- Footer -->
-<!-- 			<footer id="footer">
-				<div class="inner">
-					<ul class="icons">
-						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
-						<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
-						<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
-					</ul>
-			</div>
-           </footer> -->
-		<!-- Footer -->
-			
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.poptrox.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
-
  
 	</body>
 </html>
